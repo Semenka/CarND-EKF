@@ -115,6 +115,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     }
     cout << "EKF init: " << ekf_.x_ << endl;
     // done initializing, no need to predict or update
+    previous_timestamp_ = measurement_pack.timestamp_;
     is_initialized_ = true;
     return;
   }
@@ -133,9 +134,9 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   float dt = (measurement_pack.timestamp_ - previous_timestamp_) / 1000000.0; //dt - expressed in seconds
   previous_timestamp_ = measurement_pack.timestamp_;
 
-  float dt_2 = dt * dt;
-  float dt_3 = dt_2 * dt;
-  float dt_4 = dt_3 * dt;
+  const double dt_2 = dt * dt;
+  const double dt_3 = dt_2 * dt;
+  const double dt_4 = dt_3 * dt;
 
   //Modify the F matrix so that the time is integrated
   ekf_.F_(0, 2) = dt;
